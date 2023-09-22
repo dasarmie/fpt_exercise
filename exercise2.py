@@ -44,10 +44,14 @@ for index, row in flight_out_in.iterrows():
     airport_code = row["airport_code"]
 
     # Filter flight dataframe where the business rule is true and collect result counting the length 
-    df_out = flight[(flight["actl_dep_lcl_tms"] >= fecha_hora - timedelta(hours=2)) & (flight["actl_dep_lcl_tms"] <= fecha_hora) & (flight["orig"] == airport_code)]
+    df_out = flight[(flight["actl_dep_lcl_tms"] >= fecha_hora - timedelta(hours=2))\
+                     & (flight["actl_dep_lcl_tms"] <= fecha_hora)\
+                     & (flight["orig"] == airport_code)]
     flight_out_in.loc[index, "out"] = len(df_out)
 
-    df_in = flight[(flight["actl_arr_lcl_tms"] >= fecha_hora - timedelta(hours=2)) & (flight["actl_arr_lcl_tms"] <= fecha_hora) & (flight["dest"] == airport_code)]
+    df_in = flight[(flight["actl_arr_lcl_tms"] >= fecha_hora - timedelta(hours=2))\
+                    & (flight["actl_arr_lcl_tms"] <= fecha_hora)\
+                    & (flight["dest"] == airport_code)]
     flight_out_in.loc[index, "in"] = len(df_in)
 
 print(flight_out_in[flight_out_in["airport_code"] == "YVR"])
