@@ -2,13 +2,27 @@
 import pandas as pd
 from datetime import datetime, timedelta
 
+# Exercise 1
+
 # Read file and create dataframe
-flight = pd.read_csv('src/flight_source.csv'\
+flight = pd.read_csv("src/flight_source.csv"\
                      , delimiter=";"\
                      , parse_dates=["actl_dep_lcl_tms", "actl_arr_lcl_tms", "airborne_lcl_tms", "landing_lcl_tms"])
 
+# Create next_flight_id column using lead window function
+flight["next_flight_id"] = flight.sort_values(["actl_dep_lcl_tms"], ascending=True)\
+                                                .groupby(["acft_regs_cde"])["id"]\
+                                                    .shift(-1)
+
+flight["next_flight_id"] = flight["next_flight_id"].astype(pd.Int32Dtype())
+
+print(flight.sort_values(["acft_regs_cde"], ascending=True))
+
+# Exercise 2
+
 # Define date start regarding our dataset
-start_date = datetime(2022, 12, 31, 0, 0, 0)
+min_date = flight["actl_dep_lcl_tms"].min()
+start_date = datetime(min_date.year, min_date.month, min_date.day, 0, 0, 0)
 
 # Identify the airports uniques in our dataset
 airport_id = flight["orig"].unique().tolist()
